@@ -1,6 +1,7 @@
 package ru.practicum.shareit.util;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
@@ -10,4 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface BookingDatesValidation {
     String message() default "Booking date is invalid";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default { };
 }

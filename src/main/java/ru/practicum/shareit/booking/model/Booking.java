@@ -13,9 +13,9 @@ import java.time.ZonedDateTime;
 @Table(name = "bookings")
 @Getter
 @ToString
-@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
