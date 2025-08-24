@@ -52,7 +52,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public BookingDtoResponse judge(@PathVariable Long bookingId, @RequestHeader(headerName) Long ownerId,
                                     @RequestParam Boolean approved) {
-        log.info("PATCH /bookings/{}?approved={}; X-Sharer-User-Id={}", bookingId, ownerId, approved);
+        log.info("PATCH /bookings/{}?approved={}; X-Sharer-User-Id={}", bookingId, approved, ownerId);
         return bookingService.judge(bookingId, ownerId, approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
     }
 }

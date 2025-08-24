@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.exception.DataConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
 
 @RestControllerAdvice
 public class ErrorHandler {
@@ -26,6 +27,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDataConflict(final DataConflictException e) {
         return new ErrorResponse(e.getMessage(), "DataConflictException");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleValidation(final ValidationException e) {
+        return new ErrorResponse(e.getMessage(), e.getClass().getName());
     }
 
     @ExceptionHandler

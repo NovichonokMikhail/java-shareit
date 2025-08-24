@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static ru.practicum.shareit.booking.mapper.BookingMapper.GMT;
+import static ru.practicum.shareit.booking.mapper.BookingMapper.getUtcNow;
 import static ru.practicum.shareit.item.service.ItemServiceImpl.ITEM_NOT_FOUND;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -57,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDtoResponse judge(Long bookingId, Long ownerId, BookingStatus status) {
         final Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> BOOKING_NOT_FOUND);
-        if (ownerId.equals(booking.getItem().getOwner().getId()))
+        if (!ownerId.equals(booking.getItem().getOwner().getId()))
             throw ACCESS_DENIED;
         if (!userRepository.existsById(ownerId))
             throw UserServiceImpl.USER_NOT_FOUND;
@@ -104,7 +104,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private static Predicate<Booking> getFilterByState(BookingState state) {
-        final ZonedDateTime now = ZonedDateTime.now(GMT);
+        final ZonedDateTime now = getUtcNow();
         return switch (state) {
             case ALL -> (b) -> true;
             case CURRENT -> (b) -> (b.getStart().isBefore(now) &&

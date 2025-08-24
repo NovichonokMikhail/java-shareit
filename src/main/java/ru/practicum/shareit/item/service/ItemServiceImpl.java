@@ -21,7 +21,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import static ru.practicum.shareit.booking.mapper.BookingMapper.GMT;
+import static ru.practicum.shareit.booking.mapper.BookingMapper.getUtcNow;
 import static ru.practicum.shareit.user.service.UserServiceImpl.USER_NOT_FOUND;
 
 import java.time.ZonedDateTime;
@@ -54,15 +54,19 @@ public class ItemServiceImpl implements ItemService {
         // Validate existence of author and item
         final User author = userRepository.findById(authorId).orElseThrow(() -> USER_NOT_FOUND);
         final Item item = itemRepository.findById(itemId).orElseThrow(() -> ITEM_NOT_FOUND);
+        if (authorId.equals(item.getOwner().getId()))
+            throw new ValidationException("Owner cannot post comments under their item");
         // Check if comment author previously booked the item
-        List<Booking> previousBookings = bookingRepository.findAllByBookerIdAndItemId(authorId, itemId);
-        boolean bookingIsNotOver = previousBookings.stream()
-                .filter(booking -> booking.getStatus() == BookingStatus.APPROVED)
-                .anyMatch(booking -> booking.getEnd().isBefore(ZonedDateTime.now(GMT)));
+        List<Booking> previousBookings = bookingRepository
+                .findAllByBookerIdAndItemIdAndStatusIs(authorId, itemId, BookingStatus.APPROVED);
+        ZonedDateTime now = getUtcNow();
+        boolean bookingIsOver = previousBookings.stream()
+                .map(Booking::getEnd)
+                .allMatch(end -> end.isBefore(now) || end.isEqual(now));
         // Throw errors
         if (previousBookings.isEmpty())
             throw new ValidationException("Author never booked the item");
-        if (bookingIsNotOver)
+        if (!bookingIsOver)
             throw new ValidationException("Booking was not yet finished");
         final Comment comment = commentRepository.save(CommentMapper.dtoToComment(dto, author, item));
         return CommentMapper.commentToDto(comment);
@@ -104,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
         Booking lastBooking = null;
         // If owner then fill data, else use null
         if (item.getOwner().getId() == userId) {
-            final ZonedDateTime now = ZonedDateTime.now(GMT);
+            final ZonedDateTime now = getUtcNow();
             lastBooking = bookingRepository
                     .findTop1ByItemIdAndEndBeforeOrderByStartDesc(itemId, now)
                     .orElse(null);
@@ -120,7 +124,7 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemDtoExtended> findAllUserItems(Long ownerId) {
         // Validate user existence
         userRepository.findById(ownerId).orElseThrow(() -> USER_NOT_FOUND);
-        final ZonedDateTime now = ZonedDateTime.now(GMT);
+        final ZonedDateTime now = getUtcNow();
         // Get answer and map to extended dto
         return itemRepository.findAllByOwnerId(ownerId).stream()
                 .map(item -> {

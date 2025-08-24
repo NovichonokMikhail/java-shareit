@@ -6,15 +6,14 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
-import static ru.practicum.shareit.booking.mapper.BookingMapper.GMT;
+import static ru.practicum.shareit.booking.mapper.BookingMapper.getUtcNow;
 
 public class CommentMapper {
     public static CommentDto commentToDto(Comment comment) {
         return new CommentDto(comment.getId(), comment.getCommentText(),
-                comment.getAuthor().getName(), BookingMapper.gmtToLocal(comment.getCreated()));
+                comment.getAuthor().getName(), BookingMapper.utcToLocal(comment.getCreated()));
     }
 
     public static List<CommentDto> commentToDto(List<Comment> comments) {
@@ -24,6 +23,6 @@ public class CommentMapper {
     }
 
     public static Comment dtoToComment(final CommentDto dto, final User author, final Item item) {
-        return new Comment(null, dto.getText(), item, author, ZonedDateTime.now(GMT));
+        return new Comment(null, dto.getText(), item, author, getUtcNow());
     }
 }

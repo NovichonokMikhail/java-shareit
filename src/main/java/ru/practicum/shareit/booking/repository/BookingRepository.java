@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     List<Booking> findAllByBookerIdOrderByStartDesc(Long bookerId);
 
-    List<Booking> findAllByBookerIdAndItemId(Long bookerId, Long itemId);
+    List<Booking> findAllByBookerIdAndItemIdAndStatusIs(Long authorId, Long itemId, BookingStatus status);
 
     Optional<Booking> findTop1ByItemIdAndEndBeforeOrderByStartDesc(Long itemId, ZonedDateTime end);
 
