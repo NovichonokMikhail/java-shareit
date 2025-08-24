@@ -3,85 +3,139 @@ package ru.practicum.shareit.item.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.dao.InMemoryItemStorage;
+import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.mapper.ItemDtoMapper;
+import ru.practicum.shareit.item.mapper.CommentMapper;
+import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.item.repository.CommentRepository;
+import ru.practicum.shareit.item.dto.ItemDtoExtended;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.dao.InMemoryUserStorage;
-import ru.practicum.shareit.user.service.UserServiceImpl;
+import ru.practicum.shareit.user.repository.UserRepository;
 
+import static ru.practicum.shareit.booking.mapper.BookingMapper.GMT;
+import static ru.practicum.shareit.user.service.UserServiceImpl.USER_NOT_FOUND;
+
+import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-@Component
+@Service
 public class ItemServiceImpl implements ItemService {
+    // Common exceptions
     public static final NotFoundException ITEM_NOT_FOUND = new NotFoundException("Item with this id does not exist");
-    InMemoryItemStorage itemStorage;
-    InMemoryUserStorage userStorage;
+    // Storages
+    ItemRepository itemRepository;
+    UserRepository userRepository;
+    CommentRepository commentRepository;
+    BookingRepository bookingRepository;
 
     @Override
-    public ItemDto create(Item item, Long ownerId) {
-        User owner = userStorage.get(ownerId).orElseThrow(() -> UserServiceImpl.USER_NOT_FOUND);
-        item.setOwnerId(ownerId);
-        Item createdItem = itemStorage.create(item);
-        owner.getItems().add(createdItem.getId());
-        return ItemDtoMapper.itemToDto(createdItem);
+    public ItemDto create(ItemDto dto, Long ownerId) {
+        // Checking existence of a user
+        final User owner = userRepository.findById(ownerId).orElseThrow(() -> USER_NOT_FOUND);
+        // Saving new item
+        final Item createdItem = itemRepository.save(ItemMapper.dtoToNewItem(dto, owner));
+        return ItemMapper.itemToDto(createdItem);
+    }
+
+    @Override
+    public CommentDto createComment(CommentDto dto, Long itemId, Long authorId) {
+        // Validate existence of author and item
+        final User author = userRepository.findById(authorId).orElseThrow(() -> USER_NOT_FOUND);
+        final Item item = itemRepository.findById(itemId).orElseThrow(() -> ITEM_NOT_FOUND);
+        // Check if comment author previously booked the item
+        List<Booking> previousBookings = bookingRepository.findAllByBookerIdAndItemId(authorId, itemId);
+        boolean bookingIsNotOver = previousBookings.stream()
+                .filter(booking -> booking.getStatus() == BookingStatus.APPROVED)
+                .anyMatch(booking -> booking.getEnd().isBefore(ZonedDateTime.now(GMT)));
+        // Throw errors
+        if (previousBookings.isEmpty())
+            throw new ValidationException("Author never booked the item");
+        if (bookingIsNotOver)
+            throw new ValidationException("Booking was not yet finished");
+        final Comment comment = commentRepository.save(CommentMapper.dtoToComment(dto, author, item));
+        return CommentMapper.commentToDto(comment);
     }
 
     @Override
     public ItemDto remove(Long id) {
-        userStorage.get(id).orElseThrow(() -> UserServiceImpl.USER_NOT_FOUND);
-        return ItemDtoMapper.itemToDto(itemStorage.delete(id));
+        // Checking item existence
+        final Item item = itemRepository.findById(id).orElseThrow(() -> ITEM_NOT_FOUND);
+        itemRepository.deleteById(id);
+        return ItemMapper.itemToDto(item);
     }
 
     @Override
     public ItemDto modify(final ItemDto itemDto, final long ownerId) {
         // Checking owner and item existence
-        final User owner = userStorage.get(ownerId).orElseThrow(() -> UserServiceImpl.USER_NOT_FOUND);
-        final Item origin = itemStorage.get(itemDto.getId()).orElseThrow(() -> ITEM_NOT_FOUND);
+        final Item origin = itemRepository.findById(itemDto.getId()).orElseThrow(() -> ITEM_NOT_FOUND);
         // Validating ownership of an item
-        if (!owner.getItems().contains(origin.getId()))
+        if (origin.getOwner().getId() != ownerId)
             throw new NotFoundException("This user cannot access this item");
         // Updating and returning in proper form
-        final Item updItem = itemStorage.update(ItemDtoMapper.dtoToItem(itemDto, origin));
-        return ItemDtoMapper.itemToDto(updItem);
+        final Item updItem = itemRepository.save(ItemMapper.dtoToItem(itemDto, origin));
+        return ItemMapper.itemToDto(updItem);
     }
 
     @Override
     public Collection<ItemDto> find(final String text) {
-        Predicate<Item> consumer = (Item item) -> {
-            boolean containsName = item.getName().equalsIgnoreCase(text);
-            boolean containsDescription = item.getDescription().equalsIgnoreCase(text);
-            return containsName || containsDescription;
-        };
-        return itemStorage.findAll()
+        return itemRepository.findAllAvailableByText(text)
                 .stream()
-                .filter(Item::getAvailable)
-                .filter(consumer)
-                .map(ItemDtoMapper::itemToDto)
+                .map(ItemMapper::itemToDto)
                 .toList();
     }
 
     @Override
-    public ItemDto find(Long id) {
-        final Item item = itemStorage.get(id).orElseThrow(() -> ITEM_NOT_FOUND);
-        return ItemDtoMapper.itemToDto(item);
+    public ItemDtoExtended find(Long itemId, long userId) {
+        // Checking existence and throwing exception otherwise
+        final Item item = itemRepository.findById(itemId).orElseThrow(() -> ITEM_NOT_FOUND);
+        Booking nextBooking = null;
+        Booking lastBooking = null;
+        // If owner then fill data, else use null
+        if (item.getOwner().getId() == userId) {
+            final ZonedDateTime now = ZonedDateTime.now(GMT);
+            lastBooking = bookingRepository
+                    .findTop1ByItemIdAndEndBeforeOrderByStartDesc(itemId, now)
+                    .orElse(null);
+            nextBooking = bookingRepository
+                    .findTop1ByItemIdAndStartAfterOrderByStartAsc(itemId, now)
+                    .orElse(null);
+        }
+        return ItemMapper.itemToExtendedDto(item, commentRepository.findAllByItemId(item.getId()),
+                lastBooking, nextBooking);
     }
 
     @Override
-    public Collection<ItemDto> findAllUserItems(Long ownerId) {
-        User owner = userStorage.get(ownerId).orElseThrow(() -> UserServiceImpl.USER_NOT_FOUND);
-        return owner.getItems().stream()
-                .map(itemStorage::get)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(ItemDtoMapper::itemToDto)
+    public Collection<ItemDtoExtended> findAllUserItems(Long ownerId) {
+        // Validate user existence
+        userRepository.findById(ownerId).orElseThrow(() -> USER_NOT_FOUND);
+        final ZonedDateTime now = ZonedDateTime.now(GMT);
+        // Get answer and map to extended dto
+        return itemRepository.findAllByOwnerId(ownerId).stream()
+                .map(item -> {
+                    final Long itemId = item.getId();
+                    Booking lastBooking = bookingRepository
+                            .findTop1ByItemIdAndEndBeforeOrderByStartDesc(itemId, now)
+                            .orElse(null);
+                    Booking nextBooking = bookingRepository
+                            .findTop1ByItemIdAndStartAfterOrderByStartAsc(itemId, now)
+                            .orElse(null);
+                    return ItemMapper.itemToExtendedDto(item,
+                            commentRepository.findAllByItemId(itemId),
+                            lastBooking,
+                            nextBooking);
+                })
                 .toList();
     }
 }
