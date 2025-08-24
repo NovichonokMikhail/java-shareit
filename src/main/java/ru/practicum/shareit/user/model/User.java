@@ -1,25 +1,29 @@
 package ru.practicum.shareit.user.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Entity
+@Table(name = "users")
+@Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @NotBlank
+
+    @NotBlank(message = "Invalid name")
+    @Column
     String name;
-    @NotBlank
-    @Email
+
+    @Email(message = "Invalid email address")
+    @Column
     String email;
-    Set<Long> items = new HashSet<>();
-    List<Long> requests = new ArrayList<>();
 }
