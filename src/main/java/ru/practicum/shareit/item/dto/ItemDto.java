@@ -2,12 +2,14 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.shareit.exception.ValidationException;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class ItemDto {
     Long id;

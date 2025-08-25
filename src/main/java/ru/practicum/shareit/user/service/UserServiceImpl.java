@@ -8,8 +8,8 @@ import ru.practicum.shareit.exception.DataConflictException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserDtoMapper;
-import ru.practicum.shareit.util.BaseStorage;
+import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.Collection;
 
@@ -22,49 +22,45 @@ public class UserServiceImpl implements UserService {
     public static final DataConflictException EMAIL_IS_TAKEN =
             new DataConflictException("User with this email already exists");
     // Used Storages
-    BaseStorage<User> userStorage;
+    UserRepository userStorage;
 
     @Override
     public UserDto create(final User user) {
-        if (emailIsTaken(user.getEmail()))
+        if (userStorage.findByEmail(user.getEmail()).isPresent())
             throw EMAIL_IS_TAKEN;
-        final User createdUser = userStorage.create(user);
-        return UserDtoMapper.userToDto(createdUser);
+        final User createdUser = userStorage.save(user);
+        return UserMapper.userToDto(createdUser);
     }
 
     @Override
     public UserDto remove(Long id) {
-        userStorage.get(id).orElseThrow(() -> USER_NOT_FOUND);
-        User user = userStorage.delete(id);
-        return UserDtoMapper.userToDto(user);
+        final User user = userStorage.findById(id).orElseThrow(() -> USER_NOT_FOUND);
+        userStorage.deleteById(id);
+        return UserMapper.userToDto(user);
     }
 
     @Override
     public UserDto modify(UserDto dto) {
-        final User origin = userStorage.get(dto.getId()).orElseThrow(() -> USER_NOT_FOUND);
-        if (dto.hasEmail() && emailIsTaken(dto.getEmail()))
+        final User origin = userStorage.findById(dto.getId()).orElseThrow(() -> USER_NOT_FOUND);
+        // Check if new email is present and not taken
+        if (dto.hasEmail() && userStorage.findByEmail(dto.getEmail()).isPresent())
             throw EMAIL_IS_TAKEN;
-        User updatedUser = userStorage.update(UserDtoMapper.dtoToUser(dto, origin));
-        return UserDtoMapper.userToDto(updatedUser);
+        // Update user
+        User updatedUser = userStorage.save(UserMapper.dtoToUser(dto, origin));
+        return UserMapper.userToDto(updatedUser);
     }
 
     @Override
     public UserDto find(Long id) {
-        final User user = userStorage.get(id).orElseThrow(() -> USER_NOT_FOUND);
-        return UserDtoMapper.userToDto(user);
+        final User user = userStorage.findById(id).orElseThrow(() -> USER_NOT_FOUND);
+        return UserMapper.userToDto(user);
     }
 
     @Override
     public Collection<UserDto> findAll() {
         return userStorage.findAll()
                 .stream()
-                .map(UserDtoMapper::userToDto)
+                .map(UserMapper::userToDto)
                 .toList();
-    }
-
-    private boolean emailIsTaken(final String email) {
-        return userStorage.findAll()
-                .stream()
-                .anyMatch(user -> user.getEmail().equals(email));
     }
 }
