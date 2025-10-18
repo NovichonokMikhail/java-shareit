@@ -1,7 +1,7 @@
 package ru.practicum.server.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.server.user.model.User;
+import ru.practicum.common.model.User;
 
 import java.util.Optional;
 

@@ -8,15 +8,15 @@ import ru.practicum.common.dto.booking.BookingDtoCreation;
 import ru.practicum.common.dto.booking.BookingDtoResponse;
 import ru.practicum.common.dto.booking.BookingState;
 import ru.practicum.server.booking.mapper.BookingMapper;
-import ru.practicum.server.booking.model.Booking;
+import ru.practicum.common.model.Booking;
 import ru.practicum.common.dto.booking.BookingStatus;
 import ru.practicum.server.booking.repository.BookingRepository;
 import ru.practicum.common.exception.AccessDeniedException;
 import ru.practicum.common.exception.NotFoundException;
 import ru.practicum.common.exception.ValidationException;
-import ru.practicum.server.item.model.Item;
+import ru.practicum.common.model.Item;
 import ru.practicum.server.item.repository.ItemRepository;
-import ru.practicum.server.user.model.User;
+import ru.practicum.common.model.User;
 import ru.practicum.server.user.repository.UserRepository;
 import ru.practicum.server.user.service.UserServiceImpl;
 
@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static ru.practicum.server.booking.mapper.BookingMapper.getUtcNow;
+import static ru.practicum.common.model.ItemRequest.getUtcNow;
 import static ru.practicum.server.item.service.ItemServiceImpl.ITEM_NOT_FOUND;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

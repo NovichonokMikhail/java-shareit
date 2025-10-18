@@ -1,4 +1,4 @@
-package ru.practicum.server.item.model;
+package ru.practicum.common.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.server.user.model.User;
 import java.time.ZonedDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)

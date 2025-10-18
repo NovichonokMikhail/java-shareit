@@ -1,11 +1,11 @@
-package ru.gateway.request;
+package ru.practicum.gateway.request;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.server.request.model.ItemRequest;
+import ru.practicum.common.model.ItemRequest;
 
 @RestController
 @RequestMapping(path = "/requests")

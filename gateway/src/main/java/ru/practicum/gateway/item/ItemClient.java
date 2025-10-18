@@ -1,4 +1,4 @@
-package ru.gateway.item;
+package ru.practicum.gateway.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.gateway.client.BaseClient;
+import ru.practicum.gateway.client.BaseClient;
 import ru.practicum.common.dto.item.CommentDto;
 import ru.practicum.common.dto.item.ItemDto;
 

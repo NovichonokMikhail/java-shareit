@@ -1,12 +1,12 @@
 package ru.practicum.server.item.mapper;
 
 import ru.practicum.server.booking.mapper.BookingMapper;
-import ru.practicum.server.booking.model.Booking;
+import ru.practicum.common.model.Booking;
 import ru.practicum.common.dto.item.ItemDto;
 import ru.practicum.common.dto.item.ItemDtoExtended;
-import ru.practicum.server.item.model.Comment;
-import ru.practicum.server.item.model.Item;
-import ru.practicum.server.user.model.User;
+import ru.practicum.common.model.Comment;
+import ru.practicum.common.model.Item;
+import ru.practicum.common.model.User;
 
 import java.util.List;
 

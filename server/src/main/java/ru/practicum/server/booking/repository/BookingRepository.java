@@ -1,7 +1,7 @@
 package ru.practicum.server.booking.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.server.booking.model.Booking;
+import ru.practicum.common.model.Booking;
 import ru.practicum.common.dto.booking.BookingStatus;
 
 import java.time.ZonedDateTime;

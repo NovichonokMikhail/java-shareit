@@ -1,11 +1,9 @@
-package ru.practicum.server.booking.model;
+package ru.practicum.common.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.common.dto.booking.BookingStatus;
-import ru.practicum.server.item.model.Item;
-import ru.practicum.server.user.model.User;
 
 import java.time.ZonedDateTime;
 

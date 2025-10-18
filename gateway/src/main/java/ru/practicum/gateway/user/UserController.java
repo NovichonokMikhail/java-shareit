@@ -1,4 +1,4 @@
-package ru.gateway.user;
+package ru.practicum.gateway.user;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.dto.user.UserDto;
-import ru.practicum.server.user.model.User;
+import ru.practicum.common.model.User;
 
 @RestController
 @RequestMapping(path = "/users")

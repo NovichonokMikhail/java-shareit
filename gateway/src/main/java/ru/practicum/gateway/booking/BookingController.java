@@ -1,4 +1,4 @@
-package ru.gateway.booking;
+package ru.practicum.gateway.booking;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -15,7 +15,7 @@ import ru.practicum.common.dto.booking.BookingDtoCreation;
 @Slf4j
 @RequiredArgsConstructor
 public class BookingController {
-    String headerName = "X-Sharer-User-Id";
+    private static final String headerName = "X-Sharer-User-Id";
     BookingClient bookingClient;
 
     @GetMapping("/{bookingId}")

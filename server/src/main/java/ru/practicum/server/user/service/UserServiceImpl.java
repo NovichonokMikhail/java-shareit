@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import ru.practicum.common.exception.DataConflictException;
 import ru.practicum.common.exception.NotFoundException;
-import ru.practicum.server.user.model.User;
+import ru.practicum.common.model.User;
 import ru.practicum.common.dto.user.UserDto;
 import ru.practicum.server.user.mapper.UserMapper;
 import ru.practicum.server.user.repository.UserRepository;

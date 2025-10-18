@@ -1,7 +1,7 @@
 package ru.practicum.server.request.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.server.request.model.ItemRequest;
+import ru.practicum.common.model.ItemRequest;
 
 import java.util.Collection;
 

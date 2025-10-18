@@ -1,14 +1,14 @@
 package ru.practicum.server.request.mapper;
 
 import ru.practicum.server.item.mapper.ItemMapper;
-import ru.practicum.server.item.model.Item;
+import ru.practicum.common.model.Item;
 import ru.practicum.common.dto.request.ItemRequestDtoExtended;
-import ru.practicum.server.request.model.ItemRequest;
+import ru.practicum.common.model.ItemRequest;
 import ru.practicum.common.dto.request.ItemRequestDto;
 
 import java.util.List;
 
-import static ru.practicum.server.booking.mapper.BookingMapper.utcToLocal;
+import static ru.practicum.common.model.ItemRequest.utcToLocal;
 
 public class ItemRequestMapper {
     public static ItemRequestDto requestTotoDto(ItemRequest request) {

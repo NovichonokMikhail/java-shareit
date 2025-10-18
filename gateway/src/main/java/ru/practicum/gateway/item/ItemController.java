@@ -1,4 +1,4 @@
-package ru.gateway.item;
+package ru.practicum.gateway.item;
 
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

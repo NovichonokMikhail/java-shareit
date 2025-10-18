@@ -1,4 +1,4 @@
-package ru.gateway.request;
+package ru.practicum.gateway.request;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.gateway.client.BaseClient;
-import ru.practicum.server.request.model.ItemRequest;
+import ru.practicum.gateway.client.BaseClient;
+import ru.practicum.common.model.ItemRequest;
 
 @Service
 public class ItemRequestClient extends BaseClient {

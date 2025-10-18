@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.dto.request.ItemRequestDto;
 import ru.practicum.common.dto.request.ItemRequestDtoExtended;
-import ru.practicum.server.request.model.ItemRequest;
+import ru.practicum.common.model.ItemRequest;
 import ru.practicum.server.request.service.ItemRequestService;
 
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package ru.gateway.user;
+package ru.practicum.gateway.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.gateway.client.BaseClient;
+import ru.practicum.gateway.client.BaseClient;
 import ru.practicum.common.dto.user.UserDto;
-import ru.practicum.server.user.model.User;
+import ru.practicum.common.model.User;
 
 @Service
 public class UserClient extends BaseClient {

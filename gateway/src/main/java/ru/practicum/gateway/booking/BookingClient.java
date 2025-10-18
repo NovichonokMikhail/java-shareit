@@ -1,4 +1,4 @@
-package ru.gateway.booking;
+package ru.practicum.gateway.booking;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -7,7 +7,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.common.dto.booking.BookingDtoCreation;
-import ru.gateway.client.BaseClient;
+import ru.practicum.gateway.client.BaseClient;
 
 import java.util.Map;
 
