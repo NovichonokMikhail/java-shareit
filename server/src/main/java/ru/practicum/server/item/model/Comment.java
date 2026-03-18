@@ -1,4 +1,4 @@
-package ru.practicum.common.model;
+package ru.practicum.server.item.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import java.time.ZonedDateTime;
+import ru.practicum.server.user.model.User;
+
+import java.time.LocalDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
@@ -31,5 +33,5 @@ public class Comment {
     User author;
 
     @Column(name = "created")
-    ZonedDateTime created;
+    LocalDateTime created;
 }

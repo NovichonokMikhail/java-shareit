@@ -1,13 +1,13 @@
-//package ru.practicum.gateway;
-//
-//import org.junit.jupiter.api.Test;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//@SpringBootTest
-//class ShareItTests {
-//
-//	@Test
-//	void contextLoads() {
-//	}
-//
-//}
+package ru.practicum.gateway;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class ShareItTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

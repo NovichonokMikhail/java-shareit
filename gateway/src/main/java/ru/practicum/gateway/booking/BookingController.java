@@ -9,13 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.dto.booking.BookingDtoCreation;
 
+import static ru.practicum.common.util.Constants.headerName;
+
 @RestController
 @RequestMapping(path = "/bookings")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 @RequiredArgsConstructor
 public class BookingController {
-    private static final String headerName = "X-Sharer-User-Id";
     BookingClient bookingClient;
 
     @GetMapping("/{bookingId}")

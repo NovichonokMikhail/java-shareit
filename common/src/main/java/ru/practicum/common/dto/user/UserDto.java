@@ -1,10 +1,14 @@
 package ru.practicum.common.dto.user;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.common.util.OnCreate;
+import ru.practicum.common.util.OnUpdate;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
@@ -12,7 +16,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 public class UserDto {
     Long id;
+    @NotBlank(message = "Name must not be blank", groups = OnCreate.class)
     String name;
+    @Email(message = "Email should be valid", groups = {OnCreate.class, OnUpdate.class})
+    @NotBlank(message = "Email must not be blank", groups = OnCreate.class)
     String email;
 
     public boolean hasName() {

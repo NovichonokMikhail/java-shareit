@@ -4,13 +4,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import ru.practicum.common.exception.NotFoundException;
-import ru.practicum.common.model.Item;
-import ru.practicum.server.item.repository.ItemRepository;
-import ru.practicum.common.dto.request.ItemRequestDtoExtended;
-import ru.practicum.common.model.ItemRequest;
 import ru.practicum.common.dto.request.ItemRequestDto;
+import ru.practicum.common.dto.request.ItemRequestDtoExtended;
+import ru.practicum.common.exception.NotFoundException;
+import ru.practicum.server.item.model.Item;
+import ru.practicum.server.item.repository.ItemRepository;
 import ru.practicum.server.request.mapper.ItemRequestMapper;
+import ru.practicum.server.request.model.ItemRequest;
 import ru.practicum.server.request.repository.ItemRequestRepository;
 import ru.practicum.server.user.repository.UserRepository;
 
@@ -31,9 +31,10 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     UserRepository userRepository;
 
     @Override
-    public ItemRequestDto create(ItemRequest request, Long authorId) {
+    public ItemRequestDto create(ItemRequestDto dto, Long authorId) {
+        // Validation that author exists
         userRepository.findById(authorId).orElseThrow(() -> USER_NOT_FOUND);
-        request.setAuthorId(authorId);
+        final ItemRequest request = ItemRequestMapper.dtoToRequest(dto, authorId);
         return ItemRequestMapper.requestTotoDto(requestRepository.save(request));
     }
 

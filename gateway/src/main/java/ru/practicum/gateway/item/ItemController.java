@@ -52,6 +52,7 @@ public class ItemController {
     }
 
     @PostMapping("{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> createComment(@PathVariable Long itemId,
                                     @RequestBody CommentDto dto,
                                     @RequestHeader("X-Sharer-User-Id") Long authorId) {

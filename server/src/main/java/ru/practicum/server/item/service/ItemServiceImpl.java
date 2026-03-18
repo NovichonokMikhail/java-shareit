@@ -3,36 +3,37 @@ package ru.practicum.server.item.service;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.common.model.Booking;
 import ru.practicum.common.dto.booking.BookingStatus;
-import ru.practicum.server.booking.repository.BookingRepository;
-import ru.practicum.common.exception.NotFoundException;
-import ru.practicum.common.exception.ValidationException;
 import ru.practicum.common.dto.item.CommentDto;
 import ru.practicum.common.dto.item.ItemDto;
-import ru.practicum.server.item.mapper.CommentMapper;
-import ru.practicum.common.model.Comment;
-import ru.practicum.server.item.repository.ItemRepository;
-import ru.practicum.server.item.repository.CommentRepository;
 import ru.practicum.common.dto.item.ItemDtoExtended;
+import ru.practicum.common.exception.NotFoundException;
+import ru.practicum.common.exception.ValidationException;
+import ru.practicum.server.booking.model.Booking;
+import ru.practicum.server.booking.repository.BookingRepository;
+import ru.practicum.server.item.mapper.CommentMapper;
 import ru.practicum.server.item.mapper.ItemMapper;
-import ru.practicum.common.model.Item;
+import ru.practicum.server.item.model.Comment;
+import ru.practicum.server.item.model.Item;
+import ru.practicum.server.item.repository.CommentRepository;
+import ru.practicum.server.item.repository.ItemRepository;
 import ru.practicum.server.request.repository.ItemRequestRepository;
-import ru.practicum.common.model.User;
+import ru.practicum.server.user.model.User;
 import ru.practicum.server.user.repository.UserRepository;
 
-import static ru.practicum.common.model.ItemRequest.getUtcNow;
-import static ru.practicum.server.request.service.ItemRequestServiceImpl.REQUEST_NOT_FOUND;
-import static ru.practicum.server.user.service.UserServiceImpl.USER_NOT_FOUND;
-
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+
+import static ru.practicum.server.request.service.ItemRequestServiceImpl.REQUEST_NOT_FOUND;
+import static ru.practicum.server.user.service.UserServiceImpl.USER_NOT_FOUND;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ItemServiceImpl implements ItemService {
     // Common exceptions
     public static final NotFoundException ITEM_NOT_FOUND = new NotFoundException("Item with this id does not exist");
@@ -64,10 +65,10 @@ public class ItemServiceImpl implements ItemService {
         // Check if comment author previously booked the item
         List<Booking> previousBookings = bookingRepository
                 .findAllByBookerIdAndItemIdAndStatusIs(authorId, itemId, BookingStatus.APPROVED);
-        ZonedDateTime now = getUtcNow();
+        LocalDateTime now = LocalDateTime.now();
         boolean bookingIsOver = previousBookings.stream()
                 .map(Booking::getEnd)
-                .allMatch(end -> end.isBefore(now) || end.isEqual(now));
+                .allMatch(end -> end.isBefore(now));
         // Throw errors
         if (previousBookings.isEmpty())
             throw new ValidationException("Author never booked the item");
@@ -113,7 +114,8 @@ public class ItemServiceImpl implements ItemService {
         Booking lastBooking = null;
         // If owner then fill data, else use null
         if (item.getOwner().getId() == userId) {
-            final ZonedDateTime now = getUtcNow();
+//            final ZonedDateTime now = getUtcNow();
+            final LocalDateTime now = LocalDateTime.now();
             lastBooking = bookingRepository
                     .findTop1ByItemIdAndEndBeforeOrderByStartDesc(itemId, now)
                     .orElse(null);
@@ -129,7 +131,8 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemDtoExtended> findAllUserItems(Long ownerId) {
         // Validate user existence
         userRepository.findById(ownerId).orElseThrow(() -> USER_NOT_FOUND);
-        final ZonedDateTime now = getUtcNow();
+//        final ZonedDateTime now = getUtcNow();
+        final LocalDateTime now = LocalDateTime.now();
         // Get answer and map to extended dto
         return itemRepository.findAllByOwnerId(ownerId).stream()
                 .map(item -> {

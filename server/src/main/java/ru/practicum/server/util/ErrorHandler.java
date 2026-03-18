@@ -1,4 +1,4 @@
-package ru.practicum.gateway.util;
+package ru.practicum.server.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

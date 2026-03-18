@@ -1,7 +1,7 @@
 package ru.practicum.server.item.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.common.model.Comment;
+import ru.practicum.server.item.model.Comment;
 
 import java.util.List;
 

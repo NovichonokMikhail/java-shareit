@@ -4,11 +4,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import ru.practicum.common.dto.user.UserDto;
 import ru.practicum.common.exception.DataConflictException;
 import ru.practicum.common.exception.NotFoundException;
-import ru.practicum.common.model.User;
-import ru.practicum.common.dto.user.UserDto;
 import ru.practicum.server.user.mapper.UserMapper;
+import ru.practicum.server.user.model.User;
 import ru.practicum.server.user.repository.UserRepository;
 
 import java.util.Collection;
@@ -25,15 +25,18 @@ public class UserServiceImpl implements UserService {
     UserRepository userStorage;
 
     @Override
-    public UserDto create(final User user) {
+    public UserDto create(final UserDto user) {
+        // Validation if user already exists with such email
         if (userStorage.findByEmail(user.getEmail()).isPresent())
             throw EMAIL_IS_TAKEN;
-        final User createdUser = userStorage.save(user);
+        // Creation of new user
+        final User createdUser = userStorage.save(UserMapper.dtoToUser(user));
         return UserMapper.userToDto(createdUser);
     }
 
     @Override
     public UserDto remove(Long id) {
+        // Check if user exists
         final User user = userStorage.findById(id).orElseThrow(() -> USER_NOT_FOUND);
         userStorage.deleteById(id);
         return UserMapper.userToDto(user);
@@ -52,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto find(Long id) {
+        // Validation that user exists
         final User user = userStorage.findById(id).orElseThrow(() -> USER_NOT_FOUND);
         return UserMapper.userToDto(user);
     }

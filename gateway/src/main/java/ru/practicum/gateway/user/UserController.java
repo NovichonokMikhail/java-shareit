@@ -7,9 +7,11 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.dto.user.UserDto;
-import ru.practicum.common.model.User;
+import ru.practicum.common.util.OnCreate;
+import ru.practicum.common.util.OnUpdate;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -35,14 +37,15 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Object> createUser(@Validated(OnCreate.class) @RequestBody UserDto dto) {
         log.info("POST /users");
-        return userClient.createUser(user);
+        return userClient.createUser(dto);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> updateUser(@PathVariable final Long id, @Valid @RequestBody final UserDto dto) {
+    public ResponseEntity<Object> updateUser(@Validated(OnUpdate.class) @PathVariable final Long id,
+                                             @Valid @RequestBody final UserDto dto) {
         log.info("PATCH users/{}", id);
         dto.setId(id);
         return userClient.update(id, dto);

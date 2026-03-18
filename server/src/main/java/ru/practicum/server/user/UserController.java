@@ -1,6 +1,5 @@
 package ru.practicum.server.user;
 
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.common.dto.user.UserDto;
-import ru.practicum.common.model.User;
 import ru.practicum.server.user.service.UserService;
 
 import java.util.Collection;
@@ -18,9 +16,9 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@CrossOrigin(origins = "http://localhost:8080")
 public class UserController {
     UserService userService;
-
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -38,14 +36,15 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto createUser(@Valid @RequestBody User user) {
+    public UserDto createUser(@RequestBody UserDto dto) {
         log.info("POST /users");
-        return userService.create(user);
+        return userService.create(dto);
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto updateUser(@PathVariable final Long id, @Valid @RequestBody final UserDto dto) {
+    public UserDto updateUser(@PathVariable final Long id,
+                              @RequestBody final UserDto dto) {
         log.info("PATCH users/{}", id);
         dto.setId(id);
         return userService.modify(dto);

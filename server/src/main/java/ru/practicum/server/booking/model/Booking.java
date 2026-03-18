@@ -1,11 +1,13 @@
-package ru.practicum.common.model;
+package ru.practicum.server.booking.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.common.dto.booking.BookingStatus;
+import ru.practicum.server.item.model.Item;
+import ru.practicum.server.user.model.User;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
@@ -31,10 +33,10 @@ public class Booking {
     User booker;
 
     @Column(name = "start_date")
-    ZonedDateTime start;
+    LocalDateTime start;
 
     @Column(name = "end_date")
-    ZonedDateTime end;
+    LocalDateTime end;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

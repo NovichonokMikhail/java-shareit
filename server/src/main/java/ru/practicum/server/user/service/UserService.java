@@ -1,12 +1,11 @@
 package ru.practicum.server.user.service;
 
-import ru.practicum.common.model.User;
 import ru.practicum.common.dto.user.UserDto;
 
 import java.util.Collection;
 
 public interface UserService {
-    UserDto create(User user);
+    UserDto create(UserDto dto);
 
     UserDto remove(Long id);
 

@@ -1,6 +1,5 @@
 package ru.practicum.gateway.booking;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -13,11 +12,9 @@ import java.util.Map;
 
 @Service
 public class BookingClient extends BaseClient {
-    private static final String basePath = "/bookings";
-
-    public BookingClient(@Value("$shareit-server.url") String serverUrl, RestTemplateBuilder builder) {
+    public BookingClient(RestTemplateBuilder builder) {
         super(builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + basePath))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + "/bookings"))
                 .requestFactory(() -> new HttpComponentsClientHttpRequestFactory())
                 .build()
         );
@@ -39,7 +36,7 @@ public class BookingClient extends BaseClient {
         return post("", bookerId, dto);
     }
 
-    public ResponseEntity<Object> judge(long bookingId, long ownerId, boolean approved) {
-        return patch("/" + bookingId, ownerId, Map.of("approved", approved));
+    public ResponseEntity<Object> judge(long bookingId, long ownerId, Boolean approved) {
+        return patch(String.format("/%s?approved=%s", bookingId, approved), ownerId);
     }
 }

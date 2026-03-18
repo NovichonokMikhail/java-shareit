@@ -16,6 +16,7 @@ import java.util.Collection;
 @RequestMapping(path = "/bookings")
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:8080")
 public class BookingController {
     private final BookingService bookingService;
     private final String headerName = "X-Sharer-User-Id";

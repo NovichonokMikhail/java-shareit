@@ -5,29 +5,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.common.model.ItemRequest;
+import ru.practicum.common.dto.request.ItemRequestDto;
+
+import static ru.practicum.common.util.Constants.headerName;
 
 @RestController
 @RequestMapping(path = "/requests")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 public class ItemRequestController {
-    private static final String header = "X-Sharer-User-Id";
     ItemRequestClient requestClient;
 
     @PostMapping
-    public ResponseEntity<Object> createRequest(@RequestBody ItemRequest request,
-                                        @RequestHeader(header) Long userId) {
-        return requestClient.createItemRequest(userId, request);
+    public ResponseEntity<Object> createRequest(@RequestBody ItemRequestDto dto,
+                                        @RequestHeader(headerName) Long userId) {
+        return requestClient.createItemRequest(userId, dto);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getOwnRequests(@RequestHeader(header) Long userId) {
+    public ResponseEntity<Object> getOwnRequests(@RequestHeader(headerName) Long userId) {
         return requestClient.getAllByUser(userId);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllOthersRequests(@RequestHeader(header) Long userId) {
+    public ResponseEntity<Object> getAllOthersRequests(@RequestHeader(headerName) Long userId) {
         return requestClient.getAllFromOthers(userId);
     }
 

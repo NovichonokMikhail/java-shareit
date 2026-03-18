@@ -20,6 +20,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@CrossOrigin(origins = "http://localhost:8080")
 public class ItemController {
     ItemService itemService;
 

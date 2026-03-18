@@ -1,8 +1,6 @@
-package ru.practicum.common.model;
+package ru.practicum.server.user.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -19,11 +17,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @NotBlank(message = "Invalid name")
     @Column
+//    @NotBlank(message = "Name must not be blank")
     String name;
 
-    @Email(message = "Invalid email address")
     @Column
+//    @Email(message = "Email should be valid")
     String email;
 }

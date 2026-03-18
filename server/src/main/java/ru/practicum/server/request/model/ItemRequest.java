@@ -1,4 +1,4 @@
-package ru.practicum.common.model;
+package ru.practicum.server.request.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -6,9 +6,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
@@ -32,17 +29,17 @@ public class ItemRequest {
 
     @Builder.Default
     @Column
-    ZonedDateTime created = getUtcNow();
-
-    public static LocalDateTime utcToLocal(ZonedDateTime zonedTime) {
-        return zonedTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
-    }
-
-    public static ZonedDateTime localToUtc(LocalDateTime localTime) {
-        return localTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
-    }
-
-    public static ZonedDateTime getUtcNow() {
-        return localToUtc(LocalDateTime.now());
-    }
+    LocalDateTime created = LocalDateTime.now();
+//
+//    public static LocalDateTime utcToLocal(ZonedDateTime zonedTime) {
+//        return zonedTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+//    }
+//
+//    public static ZonedDateTime localToUtc(LocalDateTime localTime) {
+//        return localTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC);
+//    }
+//
+//    public static ZonedDateTime getUtcNow() {
+//        return ZonedDateTime.now(ZoneOffset.UTC);
+//    }
 }

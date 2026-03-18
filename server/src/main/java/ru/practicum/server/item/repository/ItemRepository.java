@@ -2,7 +2,7 @@ package ru.practicum.server.item.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.practicum.common.model.Item;
+import ru.practicum.server.item.model.Item;
 
 import java.util.List;
 
