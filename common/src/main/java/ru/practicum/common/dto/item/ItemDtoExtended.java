@@ -1,6 +1,9 @@
 package ru.practicum.common.dto.item;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.common.dto.booking.BookingDtoResponse;
 
