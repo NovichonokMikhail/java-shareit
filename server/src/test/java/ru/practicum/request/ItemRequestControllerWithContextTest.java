@@ -99,8 +99,6 @@ public class ItemRequestControllerWithContextTest {
                 .andExpect(jsonPath("$.[0].id", is(outDto.getId()), Long.class))
                 .andExpect(jsonPath("$.[0].description", is(itemRequest.getDescription()), String.class))
                 .andExpect(jsonPath("$.[0].created", is(now.toString()), String.class));
-//                .andExpect(jsonPath("$.[0].items", hasSize(1)))
-//                .andExpect(jsonPath("$.[0].items[0]", is(item), Item.class));
     }
 
     @Test

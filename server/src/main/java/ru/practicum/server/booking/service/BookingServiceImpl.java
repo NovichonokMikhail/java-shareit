@@ -107,7 +107,7 @@ public class BookingServiceImpl implements BookingService {
                 .toList();
     }
 
-    private static Predicate<Booking> getFilterByState(BookingState state) {
+    public static Predicate<Booking> getFilterByState(BookingState state) {
         final Instant now = Instant.now();
         return switch (state) {
             case ALL -> b -> true;
