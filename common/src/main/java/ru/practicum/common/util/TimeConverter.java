@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class TimeConverter {
+    private static final ZoneId zoneId = ZoneId.systemDefault();
+
     public static LocalDateTime instantToLocal(Instant time) {
-        return LocalDateTime.ofInstant(time, ZoneId.of("Europe/Moscow"));
+        return LocalDateTime.ofInstant(time, zoneId);
     }
 
     public static Instant localToInstant(LocalDateTime local) {
-        return local.atZone(ZoneId.of("Europe/Moscow")).toInstant();
+        return local.atZone(zoneId).toInstant();
     }
 }
