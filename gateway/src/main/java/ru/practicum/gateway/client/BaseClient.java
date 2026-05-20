@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class BaseClient {
     protected final RestTemplate rest;
-    protected static final String serverUrl = "http://server:9091";
+    protected static final String serverUrl = "http://server:9090";
 
     public BaseClient(RestTemplate rest) {
         this.rest = rest;
