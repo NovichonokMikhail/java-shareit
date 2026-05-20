@@ -23,7 +23,7 @@ public class BookingMapper {
         final UserDto bookerDto = UserMapper.userToDto(obj.getBooker());
         final ItemDto itemDto = ItemMapper.itemToDto(obj.getItem());
         return new BookingDtoResponse(obj.getId(), instantToLocal(obj.getStart()),
-            instantToLocal(obj.getEnd()), 
+            instantToLocal(obj.getEnd()),
             obj.getStatus(), bookerDto, itemDto);
     }
 
