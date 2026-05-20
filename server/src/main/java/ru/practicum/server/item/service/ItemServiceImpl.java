@@ -23,7 +23,7 @@ import ru.practicum.server.request.repository.ItemRequestRepository;
 import ru.practicum.server.user.model.User;
 import ru.practicum.server.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,11 +65,10 @@ public class ItemServiceImpl implements ItemService {
         // Check if comment author previously booked the item
         List<Booking> previousBookings = bookingRepository
                 .findAllByBookerIdAndItemIdAndStatusIs(authorId, itemId, BookingStatus.APPROVED);
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         boolean bookingIsOver = previousBookings.stream()
                 .map(Booking::getEnd)
                 .allMatch(end -> end.isBefore(now));
-        // Throw errors
         if (previousBookings.isEmpty())
             throw new ValidationException("Author never booked the item");
         if (!bookingIsOver)
@@ -114,8 +113,7 @@ public class ItemServiceImpl implements ItemService {
         Booking lastBooking = null;
         // If owner then fill data, else use null
         if (item.getOwner().getId() == userId) {
-//            final ZonedDateTime now = getUtcNow();
-            final LocalDateTime now = LocalDateTime.now();
+            final Instant now = Instant.now();
             lastBooking = bookingRepository
                     .findTop1ByItemIdAndEndBeforeOrderByStartDesc(itemId, now)
                     .orElse(null);
@@ -131,8 +129,7 @@ public class ItemServiceImpl implements ItemService {
     public Collection<ItemDtoExtended> findAllUserItems(Long ownerId) {
         // Validate user existence
         userRepository.findById(ownerId).orElseThrow(() -> USER_NOT_FOUND);
-//        final ZonedDateTime now = getUtcNow();
-        final LocalDateTime now = LocalDateTime.now();
+        final Instant now = Instant.now();
         // Get answer and map to extended dto
         return itemRepository.findAllByOwnerId(ownerId).stream()
                 .map(item -> {

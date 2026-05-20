@@ -1,21 +1,20 @@
 package ru.practicum.common.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder(toBuilder = true)
+@EqualsAndHashCode
 public class ItemRequestDto {
     Long id;
     @NotBlank(message = "description cannot be blank")
     String description;
-    LocalDateTime created;
+    Instant created;
 }

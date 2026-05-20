@@ -7,7 +7,7 @@ import ru.practicum.common.dto.booking.BookingStatus;
 import ru.practicum.server.item.model.Item;
 import ru.practicum.server.user.model.User;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
@@ -33,10 +33,10 @@ public class Booking {
     User booker;
 
     @Column(name = "start_date")
-    LocalDateTime start;
+    Instant start;
 
     @Column(name = "end_date")
-    LocalDateTime end;
+    Instant end;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

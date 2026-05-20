@@ -10,6 +10,7 @@ import ru.practicum.common.dto.booking.BookingState;
 import ru.practicum.common.dto.booking.BookingStatus;
 import ru.practicum.server.booking.service.BookingService;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 @RestController
@@ -47,7 +48,11 @@ public class BookingController {
     public BookingDtoResponse create(@Valid @RequestBody BookingDtoCreation dto,
                                      @RequestHeader(headerName) Long bookerId) {
         log.info("POST /bookings; X-Sharer-User-Id={}", bookerId);
-        return bookingService.create(dto, bookerId);
+        // FIX: Remove later
+        BookingDtoResponse temp = bookingService.create(dto, bookerId);
+        log.error(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(temp.getStart()));
+        log.error(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(temp.getEnd()));
+        return temp;
     }
 
     @PatchMapping("/{bookingId}")

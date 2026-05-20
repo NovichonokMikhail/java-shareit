@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.Hibernate;
 import ru.practicum.server.user.model.User;
+
+import java.util.Objects;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
@@ -40,4 +43,12 @@ public class Item {
     @NotNull(message = "availability may not has value of null")
     @Column(name = "is_available")
     Boolean available;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Item item = (Item) o;
+        return id != null && Objects.equals(id, item.id);
+    }
 }

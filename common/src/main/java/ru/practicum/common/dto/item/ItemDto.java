@@ -1,9 +1,6 @@
 package ru.practicum.common.dto.item;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.practicum.common.exception.ValidationException;
 
@@ -11,6 +8,7 @@ import ru.practicum.common.exception.ValidationException;
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ItemDto {
     Long id;
     String name;

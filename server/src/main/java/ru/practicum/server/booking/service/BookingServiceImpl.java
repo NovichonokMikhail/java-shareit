@@ -21,7 +21,7 @@ import ru.practicum.server.user.model.User;
 import ru.practicum.server.user.repository.UserRepository;
 import ru.practicum.server.user.service.UserServiceImpl;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -58,7 +58,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDtoResponse judge(Long bookingId, Long ownerId, BookingStatus status) {
-        final Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> BOOKING_NOT_FOUND);
+        final Booking booking = bookingRepository
+                .findById(bookingId)
+                .orElseThrow(() -> BOOKING_NOT_FOUND);
         if (!ownerId.equals(booking.getItem().getOwner().getId()))
             throw ACCESS_DENIED;
         if (!userRepository.existsById(ownerId))
@@ -106,8 +108,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private static Predicate<Booking> getFilterByState(BookingState state) {
-//        final ZonedDateTime now = getUtcNow();
-        final LocalDateTime now = LocalDateTime.now();
+        final Instant now = Instant.now();
         return switch (state) {
             case ALL -> b -> true;
             case CURRENT -> b -> (b.getStart().isBefore(now) &&
@@ -119,4 +120,4 @@ public class BookingServiceImpl implements BookingService {
             case REJECTED -> b -> b.getStatus() == BookingStatus.REJECTED;
         };
     }
-    }
+}

@@ -8,7 +8,7 @@ import ru.practicum.server.request.model.ItemRequest;
 
 import java.util.List;
 
-//import static ru.practicum.server.request.model.ItemRequest.utcToLocal;
+import static ru.practicum.common.util.TimeConverter.instantToLocal;
 
 public class ItemRequestMapper {
     public static ItemRequest dtoToRequest(ItemRequestDto dto, Long authorId) {
@@ -20,7 +20,7 @@ public class ItemRequestMapper {
     }
 
     public static ItemRequestDtoExtended requestToDtoExtended(ItemRequest request, List<Item> items) {
-        return new ItemRequestDtoExtended(request.getId(), request.getDescription(), request.getCreated(),
-                items.stream().map(ItemMapper::itemToDto).toList());
+        return new ItemRequestDtoExtended(request.getId(), request.getDescription(),
+                instantToLocal(request.getCreated()), items.stream().map(ItemMapper::itemToDto).toList());
     }
 }
