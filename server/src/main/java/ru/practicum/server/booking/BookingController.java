@@ -48,11 +48,7 @@ public class BookingController {
     public BookingDtoResponse create(@Valid @RequestBody BookingDtoCreation dto,
                                      @RequestHeader(headerName) Long bookerId) {
         log.info("POST /bookings; X-Sharer-User-Id={}", bookerId);
-        // FIX: Remove later
-        BookingDtoResponse temp = bookingService.create(dto, bookerId);
-        log.error(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(temp.getStart()));
-        log.error(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(temp.getEnd()));
-        return temp;
+        return bookingService.create(dto, bookerId);
     }
 
     @PatchMapping("/{bookingId}")

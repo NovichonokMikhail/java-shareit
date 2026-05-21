@@ -2,8 +2,6 @@ server:
   port: 9090
 
 spring:
-#  profiles:
-#    active: default
   datasource:
     url: jdbc:postgresql://localhost:5432/shareit_db
     username: mn
