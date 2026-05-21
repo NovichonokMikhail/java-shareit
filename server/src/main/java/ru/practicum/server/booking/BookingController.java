@@ -10,7 +10,6 @@ import ru.practicum.common.dto.booking.BookingState;
 import ru.practicum.common.dto.booking.BookingStatus;
 import ru.practicum.server.booking.service.BookingService;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
 @RestController
