@@ -1,0 +1,38 @@
+server:
+  port: 9090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shareit_db
+    username: mn
+    password: useraqwe
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always # Режим инициализации: всегда выполнять скрипты. Возможные значения: always, embedded, never
+
+    hikari:                   # Настройки пула соединений HikariCP
+      maximum-pool-size: 20   # Максимальное количество соединений в пуле
+      idle-timeout: 30000     # Время ожидания (в миллисекундах) для неактивных соединений
+
+  jpa:
+    hibernate:
+      ddl-auto: none   # Отключает автоматическую генерацию схемы БД. Возможные значения: create, update, create-drop, none
+      # none - самый безопасный режим, когда схема не меняется автоматически
+    properties:
+      hibernate:
+        format_sql: true 		# Форматирует SQL запросы перед их выполнением
+        dialect: org.hibernate.dialect.PostgreSQLDialect   # Диалект PostgreSQL для корректной работы с БД
+
+  sql:                           # Настройки выполнения SQL скриптов
+    init:
+      mode: always # Всегда выполнять скрипты инициализации
+      platform: postgresql # Платформа для выполнения скриптов
+      encoding: UTF-8 # Кодировка для выполнения скриптов
+      separator: ";"  # Разделитель SQL команд
+      data-locations: classpath:schema.sql # Путь к файлу SQL скриптов относительно classpath
+      continue-on-error: false   # Останавливать выполнение при ошибке
+      fail-on-error: true        # Вызывать исключение при ошибке
+
+logging:
+  level:
+    org:
+      springframework: INFO
