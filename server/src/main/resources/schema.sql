@@ -44,8 +44,3 @@ CREATE TABLE IF NOT EXISTS comments (
     CONSTRAINT fk_comment_to_user FOREIGN KEY (author_id) REFERENCES users (id),
     CONSTRAINT fk_comment_to_item FOREIGN KEY (item_id) REFERENCES items (id)
 );
-
---CREATE TABLE IF NOT EXISTS temp (
---    booking_time TIMESTAMP WITH TIME ZONE NOT NULL
---
---)
